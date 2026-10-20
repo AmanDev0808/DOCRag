@@ -100,6 +100,18 @@ const documentSchema = new mongoose.Schema(
         enum: ['header-right', 'footer-right', 'footer-center'],
         default: 'footer-right'
       }
+    },
+    ragContentHash: {
+      type: String,
+      default: null
+    },
+    ragIndexedAt: {
+      type: Date,
+      default: null
+    },
+    ragChunkCount: {
+      type: Number,
+      default: 0
     }
   },
   {

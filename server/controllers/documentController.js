@@ -1,4 +1,5 @@
 import Document from '../models/Document.js';
+import DocumentRagChunk from '../models/DocumentRagChunk.js';
 import mammoth from 'mammoth';
 import { createAutoSnapshotIfNeeded } from './versionController.js';
 import { sanitizeContent } from '../utils/sanitize.js';
@@ -331,6 +332,7 @@ export const permanentDeleteDocument = async (req, res) => {
     }
 
     await Document.deleteOne({ _id: req.params.id });
+    await DocumentRagChunk.deleteMany({ documentId: req.params.id });
 
     return res.json({ success: true, message: 'Document permanently deleted', id: req.params.id });
   } catch (error) {

@@ -162,7 +162,7 @@ export const checkGrammar = async (req, res) => {
     return res.json({
       matches: fallbackMatches,
       serviceAvailable: true
-    });
+    }); 
   } catch (error) {
     console.error('[Grammar Check Error]:', error);
     return res.json({

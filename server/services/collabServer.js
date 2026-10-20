@@ -1,6 +1,6 @@
 import { WebSocketServer, WebSocket } from 'ws';
-import * as Y from 'yjs';
-import * as syncProtocol from 'y-protocols/sync.js';
+import * as Y from 'yjs'; // Yjs manages the shared collaborative document state.
+import * as syncProtocol from 'y-protocols/sync.js';//This handles the protocol used to synchronize Yjs documents between clients.
 import * as awarenessProtocol from 'y-protocols/awareness.js';
 import * as encoding from 'lib0/encoding.js';
 import * as decoding from 'lib0/decoding.js';
@@ -41,7 +41,7 @@ export function broadcastDocEvent(docId, eventData) {
   });
 }
 
-/**
+/** 
  * Send an encoded message to a specific WebSocket client
  */
 const send = (conn, encoder) => {

@@ -57,3 +57,27 @@ export const createDocLimiter = rateLimit({
   legacyHeaders: false,
   handler: rateLimitHandler('Document creation limit reached. Please slow down and try again shortly.')
 });
+
+/**
+ * Rate limiter for AI document queries and semantic retrieval
+ * 20 requests per 2 minutes per IP
+ */
+export const ragQueryLimiter = rateLimit({
+  windowMs: 2 * 60 * 1000,
+  max: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  handler: rateLimitHandler('Too many AI document queries. Please wait a moment before asking again.')
+});
+
+/**
+ * Rate limiter for indexing and refreshing RAG embeddings
+ * 10 requests per 10 minutes per IP
+ */
+export const ragIndexLimiter = rateLimit({
+  windowMs: 10 * 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  handler: rateLimitHandler('Document indexing is rate-limited. Please wait before refreshing the AI index.')
+});

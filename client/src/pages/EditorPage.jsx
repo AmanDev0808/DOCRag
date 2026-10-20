@@ -987,6 +987,8 @@ const EditorPage = () => {
       {/* Gemini Smart AI Writing Assistant */}
       <AiAssistantWidget
         editor={editor}
+        documentId={id}
+        documentTitle={title}
         isOpen={isAiAssistantOpen && !isFocusMode}
         onClose={() => setIsAiAssistantOpen(false)}
       />

@@ -148,7 +148,7 @@ DOCS_mern/
    ```bash
    cp .env.example .env
    ```
-   *Verify that `MONGO_URI` points to your MongoDB instance (e.g. `mongodb://localhost:27017/google-docs-clone`).*
+   *Verify that `MONGO_URI` points to your MongoDB instance (e.g. `mongodb://localhost:27017/google-docs-clone`).* Add your Gemini API key and model names.
 
 4. Start the backend server:
    ```bash
@@ -157,6 +157,45 @@ DOCS_mern/
    npm start
    ```
    The backend API and WebSocket server will run on `http://localhost:5000`.
+
+### AI & RAG Configuration
+
+Add the following variables in `server/.env`:
+
+```env
+GEMINI_API_KEY=your_gemini_api_key_here
+GEMINI_EMBEDDING_MODEL=gemini-embedding-001
+GEMINI_GENERATION_MODEL=gemini-2.5-flash-lite
+```
+
+These values are used for:
+- generating document embeddings for semantic retrieval
+- answering questions from the current document using retrieved chunks
+- preserving the existing Gemini writing assistant behavior
+
+### How the RAG pipeline works
+
+The app now indexes document content into MongoDB-backed chunk records using embeddings and cosine similarity retrieval:
+
+1. The document content is normalized from the stored HTML/plain text.
+2. The content is split into paragraph-aware chunks to preserve context.
+3. Each chunk is embedded with a Gemini embedding model.
+4. The embeddings and metadata are stored in a separate Mongo collection (`DocumentRagChunk`).
+5. When a user asks a question in the AI panel, the app embeds the question and retrieves the top matching chunks.
+6. Gemini receives the retrieved context plus the original question and answers using only that evidence.
+7. Source excerpts are returned with the answer so users can verify the evidence.
+
+The index is refreshed lazily when the stored document hash differs from the current content, so the system avoids expensive embeddings on every keystroke.
+
+### RAG endpoints
+
+The backend exposes the following document-aware retrieval routes:
+
+- `POST /api/ai/rag/ask` — Ask a question about an authorized document
+- `POST /api/ai/rag/index/:documentId` — Refresh the document RAG index
+- `DELETE /api/ai/rag/index/:documentId` — Remove stored embeddings for a document
+
+These routes respect the existing authentication and document-permission middleware.
 
 ---
 
